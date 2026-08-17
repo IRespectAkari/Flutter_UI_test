@@ -1,0 +1,70 @@
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" href="optionStyle.css">
+    <link rel="stylesheet" href="test.css">
+    <script src="js/developmentAssert.js" defer></script>
+    <script src="js/utils.js" defer></script>
+    <script src="js/settings_import-export.js" defer></script>
+    <script src="js/optionScript.js" defer></script>
+  </head>
+  <body>
+    <!-- ヘッダー -->
+    <header>
+      <h2 id="extension-name">MAZE HELPER 設定画面</h2>
+      <!-- <span id="in-ex">
+        <button id="import">設定読み込み</button>
+        <button id="export">設定書き出し</button>
+        <button id="allReset">全初期化</button>
+      </span> -->
+    </header>
+    <!-- メインコンテンツ -->
+    <div id="main" class="flx-vertical">
+      <!-- ログインボーナスについて -->
+      <section id="loginbonus">
+        <div class="title">
+          <h2>ログインボーナスについて</h2>
+          <button class="save">保存</button>
+          <button class="reset">初期化</button>
+          <span class="changeUnsaved">現在の設定を保存していません！</span>
+        </div>
+        <p class="explanation">予測されるログインボーナスを算出するための基準となる日を設定します。今日が1日目～10日目までのいつなのか、今日と明日貰えるアイテムが何なのかを画面左上に表示します。</p>
+        <details>
+          <summary>格納・展開ボタン</summary>
+          <div id="loginDay" class="flx"></div>
+        </details>
+      </section>
+      <hr>
+      <!-- 選択肢編集について -->
+      <section id="optionEdit">
+        <div class="title">
+          <h2>選択肢編集設定</h2>
+          <button class="save">保存</button>
+          <button class="reset">初期化</button>
+          <span class="changeUnsaved">現在の設定を保存していません！</span>
+        </div>
+        <p class="explanation">選択肢を編集します。非表示化及び背景色、文字色の変更を行えます。</p>
+        <details>
+          <summary>格納・展開ボタン</summary>
+          <div id="editOptions" class="flx"></div>
+        </details>
+      </section>
+      <hr>
+    </div>
+    <!-- フッター -->
+    <footer>
+      <div>
+        <a href="https://github.com/IRespectAkari/mcq_tools/releases/latest">拡張機能DL</a>
+      </div>
+      <div id="version">Milkchoco QUEST tools v0.0.0</div>
+    </footer>
+    <!-- 設定の読み込み書き出し -->
+    <div id="io-background"></div>
+    <div id="io">
+      <button id="close">閉じる</button>
+      <p class="explanation"></p>
+      <textarea></textarea>
+      <button></button>
+    </div>
+  </body>
+</html>
