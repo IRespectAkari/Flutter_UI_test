@@ -69,13 +69,16 @@ const dp = (...args)=>{if(debugState.DEBUGMODE) console.log(args)};// debug prin
 function addChild(parent, children) {
   if (!Array.isArray(children)) children = [children].flat(Infinity);
 
-  children.filter(e=>e).forEach(e => {
-    if ("string" === typeof e || 'number' === typeof e) {
-      String(e).split("\n").forEach(E => parent.appendChild(document.createTextNode(E)));
-    } else {
-      element.appendChild(e);
-    }
-  });
+  children
+    .filter(e => e !== null && e !== undefined)
+    // .filter(e=>e)
+    .forEach(e => {
+      if ("string" === typeof e || 'number' === typeof e) {
+        String(e).split("\n").forEach(E => parent.appendChild(document.createTextNode(E)));
+      } else {
+        parent.appendChild(e);
+      }
+    });
 }
 
 /* 要素作成
@@ -91,14 +94,18 @@ function create(tagName = "div", children = [], options = {}) {
   const element = document.createElement(tagName);
 
   // 子要素の追加
-  if (!Array.isArray(children)) children = [children].flat(Infinity);
-  children.filter(e=>e).forEach(e => {
-    if ("string" === typeof e || 'number' === typeof e) {
-      String(e).split("\n").forEach(E => element.appendChild(document.createTextNode(E)));
-    } else {
-      element.appendChild(e);
-    }
-  });
+  addChild(element, children);
+  // if (!Array.isArray(children)) children = [children].flat(Infinity);
+  // children
+  //   .filter(e => e !== null && e !== undefined)
+  //   // .filter(e=>e)
+  //   .forEach(e => {
+  //     if ("string" === typeof e || 'number' === typeof e) {
+  //       String(e).split("\n").forEach(E => element.appendChild(document.createTextNode(E)));
+  //     } else {
+  //       element.appendChild(e);
+  //     }
+  //   });
 
 
   for (let [key, value] of Object.entries(options)) {
