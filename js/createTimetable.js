@@ -13,9 +13,9 @@ function crosshairHighlight(e) {
   const targetTDs = $$(`td:nth-child(${tdIndex + 1})`, td.closest("table"));
 
   ([...targetTR, ...targetTDs])
-    .map(e=>e.style.backgroundColor="#bb4e4e")
+    .map(e=>e.style.backgroundColor="rgb(255 195 195)")
 
-  td.style.backgroundColor="red"
+  td.style.backgroundColor="rgb(255 106 106)"
 }
 
 // 空の時間割を作る関数
