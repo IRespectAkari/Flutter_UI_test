@@ -2,6 +2,7 @@
 #container {
   display: flex;
   justify-content: center;
+  flex-direction: row;
 }
 
 header {
@@ -27,5 +28,8 @@ table {
     height: 6em;
     text-align: center;      /* 左右の中央揃え */
     vertical-align: middle;  /* 上下の中央揃え */
+
+    &.marker { background-color: rgb(255 195 195); }
+    &#target-marker { background-color: rgb(255 106 106);}
   }
 }
