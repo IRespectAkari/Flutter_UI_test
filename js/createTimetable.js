@@ -25,16 +25,18 @@ function crosshairHighlight(e) {
 
 // ハイライト解除
 function clearCrosshairHighlight(tableId) {
-  $$(`#${tableId} td`).map(td=>td.classList.remove("marker"));
+  $$(`#${tableId} :is(td,th)`).map(td=>td.classList.remove("marker"));
   $(`#${tableId} #target-marker`)?.removeAttribute("id");
 }
 
 // 空の時間割を作る関数
 function createEmptyTimetable(id) {
-  const week = "月火水木金".split("").map(Wrap("td", {classList: "day"}))
-  const time = range(6).map(n => create("td", n==0 ? "" : n, {classList: "time"}));
+  const week = "月火水木金".split("").map(Wrap("td", {classList: "day"}));
+  week.unshift(create("td", null, {classList: ["day", "time"]}));
 
-  const table = range(5).map(_=>range(5))
+  const time = range(6, 1).map(Wrap("th", {classList: "time"}));
+
+  const table = range(5).map(_=>range(5));
 
   const trs = table
     .map((e, time) => {
@@ -43,13 +45,14 @@ function createEmptyTimetable(id) {
     .map(Wrap("tr"));
 
   // 曜日追加
-  trs.unshift(create("tr", week));
+  const thead = create("thead", create("tr", week));
 
   // 時間追加
   trs.map((e,i)=>e.firstChild.before(time[i]));
+  const tbody = create("tbody", trs)
 
 
-  const timetable_table = create("table", trs, {id: id, classList: "timetable"});
+  const timetable_table = create("table", [thead, tbody], {id: id, classList: "timetable"});
 
   return timetable_table;
 }

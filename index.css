@@ -13,15 +13,15 @@ header {
 table {
   border-collapse: collapse;
 
-  tr:first-child td {
+  thead tr td {
     height: 2em;
   }
 
-  td:first-child {
+  :is(th,td):first-child {
     width: 2em;
   }
 
-  td {
+  td,th {
     border: solid 1px black;
     padding: 0.3em;
     width: 6em;
