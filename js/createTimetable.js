@@ -77,3 +77,43 @@ function registerAllTimetable(tableId, array) {
 function clearTimetable(tableId) {
   $$(`#${tableId} td > *`).map(e=>e.remove());
 }
+
+
+// table上に引数の時刻のラインを引く
+function drawLineByTime(tableId, targetHour, startTime, endTime) {
+  const totalHours = endTime - startTime;
+
+  if (targetHour < startTime || targetHour > endTime) {
+    console.error("時間は9から21の間で指定してください");
+    return;
+  }
+
+  // 【修正ポイント1】テーブル全体ではなく、中身（tbody）を基準にする
+  const tbody = $(`#${tableId} tbody`);
+  const tbodyHeight = tbody.offsetHeight;
+  console.log(tbody)
+  console.log(tbodyHeight)
+
+  // 【修正ポイント2】親要素（container）の「一番上」から「tbodyの一番上」までのズレ（ヘッダー等の高さ）を取得
+  const tbodyTopOffset = tbody.offsetTop;
+  console.log(tbodyTopOffset)
+
+  // 割合の計算
+  const currentProgress = (targetHour - startTime) / totalHours;
+
+  // 【修正ポイント3】tbody内の位置に、ヘッダー分のズレ（offsetTop）を足す
+  const topPosition = (tbodyHeight * currentProgress) + tbodyTopOffset;
+
+  // 赤い線の位置を更新
+  let line = $("#time-line");
+  if (!line) {
+    line = create("div", null, {id: "time-line"});
+    append("body", line);
+  }
+
+  line.style.top = topPosition+120 + 'px';
+  line.style.display = 'block';
+}
+/*
+drawLineByTime("timetable", 18, 9, 18)
+*/
