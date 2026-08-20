@@ -15,6 +15,23 @@ const timetable_2_first = [
   /* 金 */["", "経済学", "ネットワークアプリケーション構築", "", "法学"],
 ];
 
+// 1年後期
+const timetable_1_second_csv =
+// 曜日,時限,科目名
+`月,3,消費者行動論
+月,4,社会学
+火,2,宗教学
+火,3,情報リテラシー演習２
+水,1,キャリアデザイン2
+水,2,情報ネットワーク入門
+水,4,情報数学１
+水,5,インターンシップ実習
+木,2,プレゼミ2（競プロ）
+木,5,Webデザイン
+金,1,プログラミング初歩Ⅱ
+金,3,情報倫理`;
+
+// 2年前期
 const timetable_2_first_csv =
 // 曜日,時限,科目名
 `月,1,統計学入門
@@ -33,21 +50,29 @@ const timetable_2_first_csv =
 金,3,ネットワークアプリケーション構築
 金,5,法学`;
 
+// 空の時間割作成
+append("#container", createEmptyTimetable("timetable"));
+
+// 空の時間割に授業を登録（表示）
+registerAllTimetable(
+  "timetable",
+  timetable_2_first_csv.split("\n").map(e=>e.split(","))
+)
+
 // 上部トグルボタン作成
 function timetableToggle(e) {
-  const toggle = toggleGen(timetable_1_second, timetable_2_first);
+  const toggle = toggleGen(
+    timetable_1_second_csv.split("\n").map(e=>e.split(",")),
+    timetable_2_first_csv.split("\n").map(e=>e.split(","))
+  );
 
   return function(e) {
-    $("table#timetable").remove();
-    timetable = toggle.next().value;
-    $("#container").append(createTimetable(timetable));
+    clearTimetable("timetable")
+    registerAllTimetable("timetable", toggle.next().value);
   }
 }
 const toggle = create("input", null, {type: "checkbox", event: {type: "change", func: timetableToggle()}})
 const toggleLabel = create("label", [toggle, "時間割切り替え"])
 const header = $("header")
 header.append(toggleLabel)
-
-// 時間割作成および追加
-append(`#container`, createTimetable(timetable_2_first));
 
