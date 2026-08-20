@@ -68,6 +68,7 @@ function timetableToggle(e) {
 
   return function(e) {
     clearTimetable("timetable")
+    clearCrosshairHighlight("timetable")
     registerAllTimetable("timetable", toggle.next().value);
   }
 }

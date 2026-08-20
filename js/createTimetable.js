@@ -1,71 +1,76 @@
-
-
 // クリック以外から呼び出せるように、外部に作成
-// TODO: classの付け外しに変える。そしてcssにこれ用のクラスを作る
+/*
+ * クリックされたtd及びその上下左右全てをハイライト
+ * クリックされたtdは濃くハイライト
+ * 別の場所がクリックされたら一度ハイライトを全て解除する
+ */// ハイライト付与
 function crosshairHighlight(e) {
-  const td = e.target;
+  const td = e.target.closest("td");
   const table = e.target.closest("table");
-  $$("td", table).map(e=>e.style.backgroundColor="")
 
+  // 同じtdなら何もしない
+  if(td.matches("#target-marker")) return;
+
+  // 初期化
+  clearCrosshairHighlight(table.id);
+
+  // 対象検索
   const targetTR = [...td.closest("tr").children];
-  const tdIndex = td.cellIndex;
+  const targetTDs = $$(`td:nth-child(${td.cellIndex + 1})`, td.closest("table"));
 
-  const targetTDs = $$(`td:nth-child(${tdIndex + 1})`, td.closest("table"));
+  // id, class付与
+  ([...targetTR, ...targetTDs]).map(e=>e.classList.add("marker"))
+  td.id = "target-marker";
+}
 
-  ([...targetTR, ...targetTDs])
-    .map(e=>e.style.backgroundColor="rgb(255 195 195)")
-
-  td.style.backgroundColor="rgb(255 106 106)"
+// ハイライト解除
+function clearCrosshairHighlight(tableId) {
+  $$(`#${tableId} td`).map(td=>td.classList.remove("marker"));
+  $(`#${tableId} #target-marker`)?.removeAttribute("id");
 }
 
 // 空の時間割を作る関数
-function createTimetable2() {
-  const week = "月火水木金";
-  const time = n => `${1}限目`
+function createEmptyTimetable(id) {
+  const week = "月火水木金".split("").map(Wrap("td", {classList: "day"}))
+  const time = range(6).map(n => create("td", n==0 ? "" : n, {classList: "time"}));
 
-  const timetable = range(5).map(_=>range(5))
+  const table = range(5).map(_=>range(5))
 
-  // // 時間追加
-  // timetable.map((e,i)=>e.unshift(i==0 ? "" : i));
-
-  const trs = timetable
-    .map((e, n)=>e.map(e=>create("td", null, {classList: `time-${n+1}`, events: { click: crosshairHighlight }})))
+  const trs = table
+    .map((e, time) => {
+      return e.map((_, day) => create("td", null, {classList: [`time-${time + 1}`, `day-${day}`], events: { click: crosshairHighlight }}))
+    })
     .map(Wrap("tr"));
 
   // 曜日追加
-  trs.unshift(create("tr", week.split("").map(Wrap("td"))));
-
-  // ここに移動！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！！
-  // // 時間追加
-  // timetable.map((e,i)=>e.unshift(i==0 ? "" : i));
-
-  const timetable_table = create("table", trs, {id: "timetable"});
-
-  return timetable_table;
-}
-
-function createTimetable(timetable) {
-  const week = "月火水木金";
-  // const transpose = (arr) => arr[0].map((col, i) => arr.map((row) => row[i]));
-
-  timetable = transpose(timetable);
-
-  // 曜日追加
-  timetable.unshift(week.split(""));
+  trs.unshift(create("tr", week));
 
   // 時間追加
-  timetable.map((e,i)=>e.unshift(i==0 ? "" : i));
+  trs.map((e,i)=>e.firstChild.before(time[i]));
 
-  const trs = timetable.map(e=>e.map(Wrap("td", {events: { click: crosshairHighlight }}))).map(Wrap("tr"));
-  const timetable_table = create("table", trs, {id: "timetable"});
+
+  const timetable_table = create("table", trs, {id: id, classList: "timetable"});
 
   return timetable_table;
 }
 
-// 時間割データを反映させる関数
-function applyTimetable(table, events) {
-  function registerToTimetable(event) {
-    // return e => append($(, table), event)
-  }
-  events.map(registerToTimetable)
+// 1つの時間割データを反映させる関数
+function registerTimetable(tableId, day, time, course) {
+  append(
+    $(`#${tableId} td.day-${day}.time-${time}`),
+    create("span", course, {classList: "course"})
+  )
+}
+
+// 授業データ配列を変換しつつ、反映させる関数
+// [曜日,時限,科目名] => [曜日の数字, 時限, 科目名]
+function registerAllTimetable(tableId, array) {
+  array
+    .map(([day, time, course]) => ["月火水木金土".indexOf(day), time, course])
+    .map(([day, time, course]) => registerTimetable(tableId, day, time, course));
+}
+
+// 時間割データ削除
+function clearTimetable(tableId) {
+  $$(`#${tableId} td > *`).map(e=>e.remove());
 }
