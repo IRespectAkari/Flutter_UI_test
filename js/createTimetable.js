@@ -169,16 +169,16 @@ function drawLineByTime(tableId, targetHour, startTime, endTime) {
   const targetMinutes = targetHour.getHours() * 60 + targetHour.getMinutes();
   const startMinutes = startTime.getHours() * 60 + startTime.getMinutes();
   const endMinutes = endTime.getHours() * 60 + endTime.getMinutes();
+  const totalMinutes = endMinutes - startMinutes;
 
-  // console.log(targetHour < startTime || targetHour > endTime)
-  // if (targetHour < startTime || targetHour > endTime) {
+  // console.log(targetMinutes < startMinutes || targetMinutes > endMinutes)
   if (targetMinutes < startMinutes || targetMinutes > endMinutes) {
     console.error(`時間は\n${startTime}から\n${endTime}の間で指定してください\n`, targetHour, startTime, endTime);
     return;
   }
 
   const tableTopOffset = $(`#${tableId}`).offsetTop;
-  console.log(tableTopOffset)
+  // console.log(tableTopOffset)
 
   // 【修正ポイント1】テーブル全体ではなく、中身（tbody）を基準にする
   const tbody = $(`#${tableId} tbody`);
@@ -191,14 +191,14 @@ function drawLineByTime(tableId, targetHour, startTime, endTime) {
   // console.log("tbodyTopOffset",tbodyTopOffset)
 
   // 割合の計算
-  const currentProgress = (targetHour - startTime) / totalHours;
-  console.log("currentProgress",targetHour, startTime, totalHours)
-  console.log("currentProgress",currentProgress)
+  const currentProgress = (targetMinutes - startMinutes) / totalMinutes;
+  // console.log("currentProgress",targetHour, startTime, totalHours)
+  // console.log("currentProgress",currentProgress)
 
   // 【修正ポイント3】tbody内の位置に、ヘッダー分のズレ（offsetTop）を足す
   const topPosition = (tbodyHeight * currentProgress) + tbodyTopOffset;
   // console.log("tbodyHeight * currentProgress", tbodyHeight * currentProgress)
-  console.log("topPosition", topPosition)
+  // console.log("topPosition", topPosition)
   // console.log("topPosition + 120", topPosition + 120)
 
   // 赤い線の位置を更新

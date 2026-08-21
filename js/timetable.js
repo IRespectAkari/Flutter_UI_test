@@ -14,7 +14,7 @@ const timetable_1_second = [
 ];
 
 // 1年後期
-const timetable_1_second_csv =
+const timetable_1_second_csv = [
 // 曜日,時限,科目名
 `月,3,消費者行動論
 月,4,社会学
@@ -27,10 +27,10 @@ const timetable_1_second_csv =
 木,2,プレゼミ2（競プロ）
 木,5,Webデザイン
 金,1,プログラミング初歩Ⅱ
-金,3,情報倫理`;
+金,3,情報倫理`][0];
 
 // 2年前期
-const timetable_2_first_csv =
+const timetable_2_first_csv = [
 // 曜日,時限,科目名
 `月,1,統計学入門
 月,4,プログラミング実践1
@@ -46,7 +46,7 @@ const timetable_2_first_csv =
 木,3,基礎ゼミ
 金,2,経済学
 金,3,ネットワークアプリケーション構築
-金,5,法学`;
+金,5,法学`][0];
 
 // 時間割の時間
 const periodTime = [
@@ -84,10 +84,13 @@ function timetableToggle(e) {
 const toggle = create("input", null, {type: "checkbox", event: {type: "change", func: timetableToggle()}})
 const toggleLabel = create("label", [toggle, "時間割切り替え"])
 const header = $("header")
-header.append(toggleLabel)
+header.append(toggleLabel);
 
 
 // -----------------------------------------------------------------------------------------------------------------------
+(()=>{
+
+// AIモードを活用して作成
 const d = new Date();
 
 /**
@@ -217,3 +220,4 @@ const myDayPicker = createDayWheelPicker("月");
 append("body", create("div", null, {id: "test1"}));
 append("#test1", myTimePicker);
 append("#test1", myDayPicker);
+})()
