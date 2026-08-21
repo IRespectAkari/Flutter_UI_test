@@ -26,8 +26,9 @@ function crosshairAndLineAdapter(date, periodTimeArray) {
 // console.log("t")
     $(`#${id} td.${timeClass}.${dayClass}`)?.dispatchEvent(clickEvent)
     // console.log(START, END);
-    drawLineByTime(id, date, START, END);
+    // drawLineByTime(id, date, START, END);
   }
+  drawLineByTime(id, date, START, END);
 }
 
 // 何限目かを返す
@@ -137,23 +138,51 @@ function createEmptyTimetable(id, periodTimeArray) {
 
   const timetable_table = create("table", [thead, tbody], {id: id, classList: "timetable"});
 
+  const d = new Date()
+  d.setHours(8)
+  crosshairAndLineAdapter(d, periodTimeArray)
+
   return timetable_table;
 }
 
 // 1つの時間割データを反映させる関数
-function registerTimetable(tableId, day, time, course) {
-  append(
-    $(`#${tableId} td.day-${day}.time-${time}`),
-    create("span", course, {classList: "course"})
-  );
+function registerTimetable(tableId, day, time, course, others) {
+  if(!others.length){
+    append(
+      $(`#${tableId} td.day-${day}.time-${time}`),
+      create("div", course, {classList: "course"})
+    );
+  }else {
+    // console.log(others)
+    const [place, teacher, some] = others;
+    const courseInfo = [course, place, teacher].map(Wrap("span"));
+    append(
+      $(`#${tableId} td.day-${day}.time-${time}`),
+      create("div", courseInfo, {classList: "course", events: { click: showDiscription }})
+    );
+  }
+}
+
+function showDiscription(e) {
+  const parent = e.target;
+  const [course, place, teacher, some] = [...parent.children].map(e=>e.textContent)
+  // console.log(course, place, teacher, some)
+
+  // 下からせり出すdivを作成
+  const tagList = ["h1", "span", "span", "span", "p"]
+  const info = [course, place, teacher, some].map((e,i)=>create(tagList[i], e))
+  discriptionDiv = create("div", info, {id: "discriptionDiv"});
+  // discriptionDiv
+
+  append("body", discriptionDiv);
 }
 
 // 授業データ配列を変換しつつ、反映させる関数
 // [曜日,時限,科目名] => [曜日の数字, 時限, 科目名]
 function registerAllTimetable(tableId, array) {
   array
-    .map(([day, time, course]) => ["月火水木金土".indexOf(day), time, course])
-    .map(([day, time, course]) => registerTimetable(tableId, day, time, course));
+    .map(([day, time, course, ...others]) => ["月火水木金土".indexOf(day), time, course, others])
+    .map(([day, time, course, others]) => registerTimetable(tableId, day, time, course, others));
 }
 
 // 時間割データ削除
@@ -164,6 +193,13 @@ function clearTimetable(tableId) {
 
 // table上に引数の時刻のラインを引く
 function drawLineByTime(tableId, targetHour, startTime, endTime) {
+  // 赤い線の位置を更新
+  let line = $("#time-line");
+  if (!line) {
+    line = create("div", null, {id: "time-line"});
+    append("body", line);
+  }
+
   const totalHours = endTime - startTime;
 
   const targetMinutes = targetHour.getHours() * 60 + targetHour.getMinutes();
@@ -173,7 +209,8 @@ function drawLineByTime(tableId, targetHour, startTime, endTime) {
 
   // console.log(targetMinutes < startMinutes || targetMinutes > endMinutes)
   if (targetMinutes < startMinutes || targetMinutes > endMinutes) {
-    console.error(`時間は\n${startTime}から\n${endTime}の間で指定してください\n`, targetHour, startTime, endTime);
+    clearLine()
+    // console.error(`時間は\n${startTime}から\n${endTime}の間で指定してください\n`, targetHour, startTime, endTime);
     return;
   }
 
@@ -201,12 +238,6 @@ function drawLineByTime(tableId, targetHour, startTime, endTime) {
   // console.log("topPosition", topPosition)
   // console.log("topPosition + 120", topPosition + 120)
 
-  // 赤い線の位置を更新
-  let line = $("#time-line");
-  if (!line) {
-    line = create("div", null, {id: "time-line"});
-    append("body", line);
-  }
 
   line.style.top = topPosition + tableTopOffset - 1 + 'px';
   line.style.display = 'block';

@@ -48,6 +48,24 @@ const timetable_2_first_csv = [
 金,3,ネットワークアプリケーション構築
 金,5,法学`][0];
 
+const sample = [
+// 曜日,時限,講義名,講義室,先生名,メモ
+`月,1,統計学入門,3号館 301室,佐藤 健一,出席カードあり・教科書持参
+月,4,プログラミング実践1,メディアセンター 実習室A,田中 裕子,演習課題は次回までに提出
+月,5,プログラミング実践1,メディアセンター 実習室A,田中 裕子,連続講義（4限の続き）
+火,1,アプリ共同開発実践,2号館 PC室2,鈴木 誠,チーム分け発表・GitHub要準備
+火,2,初級韓国語,1号館 105室,金 敏智,小テストの頻度高め
+火,4,データベース論,3号館 204室,高橋 隆,SQLの基本復習をしておく
+火,5,スイッチング技術,4号館 ネットワーク演習室,渡辺 浩,実機（Cisco）を使った実習
+水,1,ビジネスプログラミング,2号館 PC室1,伊藤 恵子,レポート課題あり
+水,3,情報処理技術演習1,メディアセンター 実習室B,中村 昭夫,タイピング練習あり
+水,4,経営情報学1,1号館 202室,小林 直樹,ケーススタディ中心
+水,5,情報数学2,3号館 102室,加藤 洋子,グラフ理論の小テスト注意
+木,3,基礎ゼミ,研究棟 会議室3,山本 哲也,プレゼン準備期間
+金,2,経済学,1号館 大講義室,松本 圭介,マクロ経済の基礎・出席重視
+金,3,ネットワークアプリケーション構築,2号館 PC室2,井上 健太郎,API連携のデモあり
+金,5,法学,1号館 303室,清水 美紀,六法（またはスマホで条文）持参`][0];
+
 // 時間割の時間
 const periodTime = [
   ["8:50", "10:20"],
@@ -69,22 +87,31 @@ registerAllTimetable(
 
 // 上部トグルボタン作成
 function timetableToggle(e) {
-  const toggle = toggleGen(
+  // const toggle = toggleGen(
+  //   timetable_1_second_csv.split("\n").map(e=>e.split(",")),
+  //   timetable_2_first_csv.split("\n").map(e=>e.split(",")),
+  // );
+  const toggle = [
     timetable_1_second_csv.split("\n").map(e=>e.split(",")),
-    timetable_2_first_csv.split("\n").map(e=>e.split(","))
-  );
+    timetable_2_first_csv.split("\n").map(e=>e.split(",")),
+    sample.split("\n").map(e=>e.split(",")),
+  ]
 
   return function(e) {
+    console.log(e)
     clearTimetable("timetable")
     clearCrosshairHighlight("timetable")
     clearLine()
-    registerAllTimetable("timetable", toggle.next().value);
+    registerAllTimetable("timetable", toggle[Math.floor(Math.random() * 3)]);
+    // registerAllTimetable("timetable", toggle.next().value);
   }
 }
-const toggle = create("input", null, {type: "checkbox", event: {type: "change", func: timetableToggle()}})
-const toggleLabel = create("label", [toggle, "時間割切り替え"])
-const header = $("header")
-header.append(toggleLabel);
+// const toggle = create("input", null, {type: "checkbox", event: {type: "change", func: timetableToggle()}})
+// const toggleLabel = create("label", [toggle, "時間割切り替え"])
+// const header = $("header")
+// header.append(toggleLabel);
+const toggleBtn = create("Button", "時間割切り替え", { event: {type: "click", func: timetableToggle()}})
+append("header", toggleBtn);
 
 
 // -----------------------------------------------------------------------------------------------------------------------
@@ -92,6 +119,7 @@ header.append(toggleLabel);
 
 // AIモードを活用して作成
 const d = new Date();
+// d.setHours(8, 50)
 
 /**
  * Dateオブジェクトを指定した曜日に変更する（同じ週の中で移動）
@@ -220,4 +248,6 @@ const myDayPicker = createDayWheelPicker("月");
 append("body", create("div", null, {id: "test1"}));
 append("#test1", myTimePicker);
 append("#test1", myDayPicker);
+
+crosshairAndLineAdapter(d, periodTime)
 })()

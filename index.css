@@ -34,6 +34,17 @@ table {
     vertical-align: middle;  /* 上下の中央揃え */
     font-size: 0.5em;
 
+    div {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      justify-content: space-evenly;
+
+      span:first-child {
+        margin-bottom: 1em;inherit
+      }
+    }
+
     &.marker { background-color: rgb(255 195 195); }
     &#target-marker { background-color: rgb(255 106 106);}
   }
