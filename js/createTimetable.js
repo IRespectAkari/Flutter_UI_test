@@ -88,21 +88,28 @@ function drawLineByTime(tableId, targetHour, startTime, endTime) {
     return;
   }
 
+  const tableTopOffset = $(`#${tableId}`).offsetTop;
+  console.log(tableTopOffset)
+
   // 【修正ポイント1】テーブル全体ではなく、中身（tbody）を基準にする
   const tbody = $(`#${tableId} tbody`);
   const tbodyHeight = tbody.offsetHeight;
   console.log(tbody)
-  console.log(tbodyHeight)
+  console.log("tbodyHeight", tbodyHeight)
 
   // 【修正ポイント2】親要素（container）の「一番上」から「tbodyの一番上」までのズレ（ヘッダー等の高さ）を取得
   const tbodyTopOffset = tbody.offsetTop;
-  console.log(tbodyTopOffset)
+  console.log("tbodyTopOffset",tbodyTopOffset)
 
   // 割合の計算
   const currentProgress = (targetHour - startTime) / totalHours;
+  console.log("currentProgress",currentProgress)
 
   // 【修正ポイント3】tbody内の位置に、ヘッダー分のズレ（offsetTop）を足す
   const topPosition = (tbodyHeight * currentProgress) + tbodyTopOffset;
+  console.log("tbodyHeight * currentProgress", tbodyHeight * currentProgress)
+  console.log("topPosition", topPosition)
+  console.log("topPosition + 120", topPosition + 120)
 
   // 赤い線の位置を更新
   let line = $("#time-line");
@@ -111,7 +118,7 @@ function drawLineByTime(tableId, targetHour, startTime, endTime) {
     append("body", line);
   }
 
-  line.style.top = topPosition+120 + 'px';
+  line.style.top = topPosition + tableTopOffset - 1 + 'px';
   line.style.display = 'block';
 }
 /*

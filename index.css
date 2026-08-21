@@ -3,6 +3,7 @@
   display: flex;
   justify-content: center;
   flex-direction: row;
+  /* position: relative; */
 }
 
 header {
@@ -12,6 +13,9 @@ header {
 
 table {
   border-collapse: collapse;
+  /* position: relative; */
+  width: 100%;
+  aspect-ratio: 1;
 
   thead tr td {
     height: 2em;
@@ -28,6 +32,7 @@ table {
     height: 6em;
     text-align: center;      /* 左右の中央揃え */
     vertical-align: middle;  /* 上下の中央揃え */
+    font-size: 0.5em;
 
     &.marker { background-color: rgb(255 195 195); }
     &#target-marker { background-color: rgb(255 106 106);}
@@ -42,4 +47,18 @@ div#time-line {
   background-color: red;
   display: none;
   pointer-events: none;
+  z-index: 10;
+
+  span#time-label {
+    position: absolute;
+    left: 10px;
+    top: -18px; /* 線の少し上に配置 */
+    background-color: red;
+    color: white;
+    font-size: 11px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    font-weight: bold;
+    white-space: nowrap;
+  }
 }
