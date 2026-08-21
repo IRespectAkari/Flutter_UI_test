@@ -48,8 +48,18 @@ const timetable_2_first_csv =
 金,3,ネットワークアプリケーション構築
 金,5,法学`;
 
+// 時間割の時間
+const periodTime = [
+  ["8:50", "10:20"],
+  ["10:30", "12:00"],
+  ["12:50", "14:20"],
+  ["14:30", "16:00"],
+  ["16:10", "17:40"],
+]
+
 // 空の時間割作成
-append("#container", createEmptyTimetable("timetable"));
+// append("#container", createEmptyTimetable("timetable"));
+append("#container", createEmptyTimetable("timetable", periodTime));
 
 // 空の時間割に授業を登録（表示）
 registerAllTimetable(
@@ -67,6 +77,7 @@ function timetableToggle(e) {
   return function(e) {
     clearTimetable("timetable")
     clearCrosshairHighlight("timetable")
+    clearLine()
     registerAllTimetable("timetable", toggle.next().value);
   }
 }
@@ -75,3 +86,134 @@ const toggleLabel = create("label", [toggle, "時間割切り替え"])
 const header = $("header")
 header.append(toggleLabel)
 
+
+// -----------------------------------------------------------------------------------------------------------------------
+const d = new Date();
+
+/**
+ * Dateオブジェクトを指定した曜日に変更する（同じ週の中で移動）
+ * @param {Date} date - 変更したいDateオブジェクト
+ * @param {number} targetDayIndex - 設定したい曜日 (0:日, 1:月, ..., 6:土)
+ */
+function setDayOfWeek(date, targetDayIndex) {
+  const currentDayIndex = date.getDay(); // 現在の曜日 (0~6)
+
+  // 目標の曜日との差分（日数）を計算
+  const distance = targetDayIndex - currentDayIndex;
+
+  // 日付を進める（または戻す）
+  date.setDate(date.getDate() + distance);
+}
+
+/**
+ * ホイールで10分単位で増減するdiv要素を出力する関数
+ * @param {string} initialTime - 初期時刻（例: "08:50" や "8:50"）
+ * @returns {HTMLElement} 生成されたdiv要素
+ */
+function createTimeWheelPicker(initialTime) {
+  // 初期値を「時」と「分」に分解して数値化
+  let [hours, minutes] = initialTime.split(':').map(Number);
+
+  // 表示を「00:00」の形式に整えるヘルパー
+  const formatTime = (h, m) => {
+    return `${String(h).padStart(2, '0')}:${String(m).padStart(2, '0')}`;
+  };
+
+  // 1. 最初の一文字（初期表示）を入れたdivを作成
+  const timeDiv = create('div', formatTime(hours, minutes), {id: "timeDiv"});
+
+  // スタイルの調整（任意：スクロール時に画面がガタつかないようにする）
+  // timeDiv.style.display = 'inline-block';
+  // timeDiv.style.cursor = 'ns-resize'; // 上下矢印のカーソル
+
+  // 2. マウスホイールイベントを登録
+  timeDiv.addEventListener('wheel', (e) => {
+    // ブラウザ自体のスクロールを止める
+    e.preventDefault();
+
+    // e.deltaY がマイナスなら上スクロール（時間を進める）、プラスなら下（時間を戻す）
+    if (e.deltaY < 0) {
+      minutes += 10;
+    } else {
+      minutes -= 10;
+    }
+
+    // 分の繰り上がり・繰り下がり処理
+    if (minutes >= 60) {
+      minutes = 0;
+      hours = (hours + 1) % 24; // 23時の次は0時
+    } else if (minutes < 0) {
+      minutes = 50;
+      hours = (hours - 1 + 24) % 24; // 0時の前は23時
+    }
+
+    // 3. 画面の文字を更新
+    timeDiv.textContent = formatTime(hours, minutes);
+
+    // 4. dを更新して、crosshairAndLineAdapterの実行
+    // const d = new Date()
+    d.setHours(hours, minutes)
+    // setDayOfWeek(d, )
+    // d.set
+    crosshairAndLineAdapter(d, periodTime)
+  }, { passive: false }); // preventDefaultを動かすために必要
+
+  return timeDiv;
+}
+
+/**
+ * ホイールで曜日をローテーションするdiv要素を出力する関数
+ * @param {string} initialDay - 初期曜日（例: "月"）
+ * @returns {HTMLElement} 生成されたdiv要素
+ */
+function createDayWheelPicker(initialDay) {
+  const dayNames = ['日', '月', '火', '水', '木', '金', '土'];
+
+  // 初期値のインデックスを探す（見つからない場合は0 = 日曜日）
+  let currentIndex = dayNames.indexOf(initialDay);
+  if (currentIndex === -1) currentIndex = 0;
+
+  // 1. 初期表示の曜日を入れたdivを作成
+  const dayDiv = create('div', dayNames[currentIndex], {id: "dayDiv"});
+
+  // スタイルの調整
+  dayDiv.style.display = 'inline-block';
+  dayDiv.style.cursor = 'ns-resize'; // 上下矢印のカーソル
+
+  // 2. マウスホイールイベントを登録
+  dayDiv.addEventListener('wheel', (e) => {
+    // ブラウザ自体のスクロールを止める
+    e.preventDefault();
+
+    // e.deltaY がマイナスなら上スクロール（次の曜日）、プラスなら下（前の曜日）
+    if (e.deltaY < 0) {
+      // 6の次は0に戻るループ処理
+      currentIndex = (currentIndex + 1) % 7;
+    } else {
+      // 0の前は6に戻るループ処理
+      currentIndex = (currentIndex - 1 + 7) % 7;
+    }
+
+    // 3. 画面の文字を更新
+    dayDiv.textContent = dayNames[currentIndex];
+
+    // 4. dを更新して、crosshairAndLineAdapterの実行
+    console.log(currentIndex + 1);
+    setDayOfWeek(d, currentIndex + 1);
+    crosshairAndLineAdapter(d, periodTime)
+  }, { passive: false });
+
+  return dayDiv;
+}
+
+// -----------------------------------------------------------------------------------------------------------------------
+
+// 関数を実行して要素を作る
+const myTimePicker = createTimeWheelPicker("8:50");
+// 「月」を初期値として要素を作成
+const myDayPicker = createDayWheelPicker("月");
+
+// 画面の好きな場所（例: body）に追加する
+append("body", create("div", null, {id: "test1"}));
+append("#test1", myTimePicker);
+append("#test1", myDayPicker);

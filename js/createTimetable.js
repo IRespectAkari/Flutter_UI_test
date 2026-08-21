@@ -1,4 +1,80 @@
 // クリック以外から呼び出せるように、外部に作成
+function crosshairAndLineAdapter(date, periodTimeArray) {
+  const createTimeObj = timeTxt => {const d = new Date(); d.setHours(...(timeTxt.split(":"))); return d;}
+
+  const START = createTimeObj("8:50");
+  const END   = createTimeObj("17:40");
+
+  const clickEvent = new MouseEvent("click", {
+    bubbles: true,
+    cancelable: true,
+    view: window
+  });
+
+// console.log(getPeriodIndex(date, periodTimeArray))
+  const period = getPeriodIndex(date, periodTimeArray) + 1;
+  const day = date.getDay() - 2;
+  const timeClass = `time-${period}`
+  const dayClass  = `day-${day}`
+// console.log(timeClass, dayClass)
+
+  const id = "timetable";
+// console.log(`#${id} td.${timeClass}.${dayClass}`)
+  if(
+    !(period < 1 || 5 < period || day < 0 || 4 < day)
+  ){
+// console.log("t")
+    $(`#${id} td.${timeClass}.${dayClass}`)?.dispatchEvent(clickEvent)
+    // console.log(START, END);
+    drawLineByTime(id, date, START, END);
+  }
+}
+
+// 何限目かを返す
+function getPeriodIndex(targetDate, periodTimeArray) {
+  // 1. 引数のDateから「時:分」を取り出し、比較しやすい数値（分換算）にする
+  const targetMinutes = targetDate.getHours() * 60 + targetDate.getMinutes();
+
+  // 2. 配列の各時間帯とループで比較する
+  const convertToTime = time => {
+    const [h, m] = time.split(':').map(Number);
+    return h * 60 + m;
+  }
+
+  const result = periodTimeArray
+    .map(([start, end])=>[
+      convertToTime(start),
+      convertToTime(end)])
+    .findIndex(([startMinutes, endMinutes], i) => targetMinutes >= startMinutes && targetMinutes <= endMinutes)
+    // .map(([startMinutes, endMinutes], i) => targetMinutes >= startMinutes && targetMinutes <= endMinutes ? i : -1)
+    // .filter(e=>e>=0)
+  // console.log("getPeriodIndex", result)
+
+  return result;
+  // return result[0] ? result[0] : -1;
+/*
+  for (let i = 0; i < periodTime.length; i++) {
+    const [startStr, endStr] = periodTime[i];
+
+    // 「8:50」を 分 換算にする（8 * 60 + 50 = 530分）
+    const [startH, startM] = startStr.split(':').map(Number);
+    const startMinutes = startH * 60 + startM;
+
+    // 「10:20」を 分 換算にする（10 * 60 + 20 = 620分）
+    const [endH, endM] = endStr.split(':').map(Number);
+    const endMinutes = endH * 60 + endM;
+
+    // 引数の時間が、開始〜終了の間にあるか判定
+    if (targetMinutes >= startMinutes && targetMinutes <= endMinutes) {
+      return i; // 何番目かを返す（0からスタート）
+    }
+  }
+
+  return -1; // どこにも属さない場合
+*/
+}
+
+
 /*
  * クリックされたtd及びその上下左右全てをハイライト
  * クリックされたtdは濃くハイライト
@@ -30,11 +106,18 @@ function clearCrosshairHighlight(tableId) {
 }
 
 // 空の時間割を作る関数
-function createEmptyTimetable(id) {
+function createEmptyTimetable(id, periodTimeArray) {
   const week = "月火水木金".split("").map(Wrap("td", {classList: "day"}));
   week.unshift(create("td", null, {classList: ["day", "time"]}));
 
-  const time = range(6, 1).map(Wrap("th", {classList: "time"}));
+  const time = range(5, 1)// 1, 2, 3, 4, 5
+    .map((n, i) => [
+      create("span", periodTimeArray[i][0], {classList: `start-${n}`}),
+      create("span", n),
+      create("span", periodTimeArray[i][1], {classList: `end-${n}`})
+    ])
+    .map(Wrap("div"))
+    .map(Wrap("th", {classList: "time"}));
 
   const table = range(5).map(_=>range(5));
 
@@ -62,7 +145,7 @@ function registerTimetable(tableId, day, time, course) {
   append(
     $(`#${tableId} td.day-${day}.time-${time}`),
     create("span", course, {classList: "course"})
-  )
+  );
 }
 
 // 授業データ配列を変換しつつ、反映させる関数
@@ -83,8 +166,14 @@ function clearTimetable(tableId) {
 function drawLineByTime(tableId, targetHour, startTime, endTime) {
   const totalHours = endTime - startTime;
 
-  if (targetHour < startTime || targetHour > endTime) {
-    console.error("時間は9から21の間で指定してください");
+  const targetMinutes = targetHour.getHours() * 60 + targetHour.getMinutes();
+  const startMinutes = startTime.getHours() * 60 + startTime.getMinutes();
+  const endMinutes = endTime.getHours() * 60 + endTime.getMinutes();
+
+  // console.log(targetHour < startTime || targetHour > endTime)
+  // if (targetHour < startTime || targetHour > endTime) {
+  if (targetMinutes < startMinutes || targetMinutes > endMinutes) {
+    console.error(`時間は\n${startTime}から\n${endTime}の間で指定してください\n`, targetHour, startTime, endTime);
     return;
   }
 
@@ -94,22 +183,23 @@ function drawLineByTime(tableId, targetHour, startTime, endTime) {
   // 【修正ポイント1】テーブル全体ではなく、中身（tbody）を基準にする
   const tbody = $(`#${tableId} tbody`);
   const tbodyHeight = tbody.offsetHeight;
-  console.log(tbody)
-  console.log("tbodyHeight", tbodyHeight)
+  // console.log(tbody)
+  // console.log("tbodyHeight", tbodyHeight)
 
   // 【修正ポイント2】親要素（container）の「一番上」から「tbodyの一番上」までのズレ（ヘッダー等の高さ）を取得
   const tbodyTopOffset = tbody.offsetTop;
-  console.log("tbodyTopOffset",tbodyTopOffset)
+  // console.log("tbodyTopOffset",tbodyTopOffset)
 
   // 割合の計算
   const currentProgress = (targetHour - startTime) / totalHours;
+  console.log("currentProgress",targetHour, startTime, totalHours)
   console.log("currentProgress",currentProgress)
 
   // 【修正ポイント3】tbody内の位置に、ヘッダー分のズレ（offsetTop）を足す
   const topPosition = (tbodyHeight * currentProgress) + tbodyTopOffset;
-  console.log("tbodyHeight * currentProgress", tbodyHeight * currentProgress)
+  // console.log("tbodyHeight * currentProgress", tbodyHeight * currentProgress)
   console.log("topPosition", topPosition)
-  console.log("topPosition + 120", topPosition + 120)
+  // console.log("topPosition + 120", topPosition + 120)
 
   // 赤い線の位置を更新
   let line = $("#time-line");
@@ -124,3 +214,9 @@ function drawLineByTime(tableId, targetHour, startTime, endTime) {
 /*
 drawLineByTime("timetable", 18, 9, 18)
 */
+
+// ライン解除
+function clearLine() {
+  $("#time-line").style.display = "none";
+}
+// drawLineByTime("timetable", 18, 9, 18)
