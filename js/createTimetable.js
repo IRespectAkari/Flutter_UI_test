@@ -155,26 +155,47 @@ function registerTimetable(tableId, day, time, course, others) {
   }else {
     // console.log(others)
     const [place, teacher, some] = others;
-    const courseInfo = [course, place, teacher].map(Wrap("span"));
+    const classNames = ["courseName", "place", "teacher", "discription"]
+    const courseInfo = [course, place, teacher].map((e,i)=>create("span", e, {classList: classNames[i]}));
     append(
       $(`#${tableId} td.day-${day}.time-${time}`),
       create("div", courseInfo, {classList: "course", events: { click: showDiscription }})
     );
   }
+  return;
+// ------------------------
+  // console.log(others)
+  const [place, teacher, some] = others;
+  const classNames = ["courseName", "place", "teacher", "discription"]
+  const courseInfo = [course, place, teacher].map((e,i)=>create("span", e, {classList: classNames[i]}));
+  append(
+    $(`#${tableId} td.day-${day}.time-${time}`),
+    create("div", courseInfo, {classList: "course", events: { click: showDiscription }})
+  );
 }
 
 function showDiscription(e) {
-  const parent = e.target;
+  const parent = e.target.closest("div.course");
+  // if() 
+console.log(parent)
   const [course, place, teacher, some] = [...parent.children].map(e=>e.textContent)
-  // console.log(course, place, teacher, some)
 
-  // 下からせり出すdivを作成
-  const tagList = ["h1", "span", "span", "span", "p"]
-  const info = [course, place, teacher, some].map((e,i)=>create(tagList[i], e))
-  discriptionDiv = create("div", info, {id: "discriptionDiv"});
-  // discriptionDiv
+  const info = {
+    "courseName": course,
+    "place": place,
+    "teacher": teacher,
+    "discription": some,
+  };
+  Object.entries(info)
+    .map(peek)
+    .map(([tag, data])=>{
+      console.log(tag, data, `#discriptionDiv .${tag}`)
+      $(`#discriptionDiv .${tag}`).textContent = data
+    })
 
-  append("body", discriptionDiv);
+  // 下からせり出すdivを表示
+  $("#discriptionDiv").classList.toggle("show");
+console.log(info)
 }
 
 // 授業データ配列を変換しつつ、反映させる関数
@@ -213,7 +234,7 @@ function drawLineByTime(tableId, targetHour, startTime, endTime) {
     // console.error(`時間は\n${startTime}から\n${endTime}の間で指定してください\n`, targetHour, startTime, endTime);
     return;
   }
-
+if(!$(`#${tableId}`)) return;
   const tableTopOffset = $(`#${tableId}`).offsetTop;
   // console.log(tableTopOffset)
 

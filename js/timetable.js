@@ -113,6 +113,13 @@ function timetableToggle(e) {
 const toggleBtn = create("Button", "時間割切り替え", { event: {type: "click", func: timetableToggle()}})
 append("header", toggleBtn);
 
+append("#container", create("div", [
+  create("h1", null, {classList: "courseName"}),
+  create("span", null, {classList: "place"}),
+  create("span", null, {classList: "teacher"}),
+  create("p", null, {classList: "discription"})
+], {id: "discriptionDiv"}));
+
 
 // -----------------------------------------------------------------------------------------------------------------------
 (()=>{
