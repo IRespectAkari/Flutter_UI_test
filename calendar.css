@@ -1,0 +1,38 @@
+
+#container {
+  display: flex;
+  justify-content: center;
+  /* position: relative; */
+  > div {
+    display: block;
+  }
+}
+
+header {
+  /* display: flex; */
+  /* justify-content: center; */
+}
+
+div#calendarTest {
+  display: grid;
+  /* grid-auto-flow: column; */
+  /* gap: 1em; */
+  grid-template-columns: repeat(7, 1fr); /* 3列に指定 */
+  width: 90vw;
+  margin: auto;
+
+  span {
+    border: 1px solid;
+
+    &.day {
+      aspect-ratio: 1;
+      display: flex;
+      justify-content: flex-end;
+
+      &.spliter {
+        border-top: 2px solid;
+        height: calc(auto - 1px);
+      }
+    }
+  }
+}
