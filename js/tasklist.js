@@ -39,35 +39,6 @@ const tasklist = tasklistCSV.trim().split("\n").map(s=>s.split(","))
 const columns = ["カテゴリ","タイトル","詳細","期限","状態","優先度"]
 const columnsEng = ["category","title","info","limit","status","priority"]
 
-function statusChange(e) {
-  // ["未着手", "進行中", "完了"]
-  const btn = e.target
-  const STATUS = ["□", "✅"]
-  const nowStatus = Boolean(STATUS.indexOf(btn.textContent))
-}
-
-function showInfo(e) {
-  const title = e.target.textContent;
-  const info = tasklist.find(e=>e[1] == title)
-  const data = info
-    .map((e,n) => [
-      create("th", columns[n], {id: columnsEng[n]}),
-      create("td", e)
-    ])
-    .map(Wrap("tr"))
-  const table = create("table", data);
-
-  const information = $("#information")
-
-  information.replaceChildren(table);
-  information.classList.add("show");
-}
-
-function hideInfo(e) {
-  
-}
-
-
 function getRemainingTime(limit) {
   const now = new Date();
   const deadline = new Date(limit);
@@ -99,6 +70,32 @@ function getRemainingTime(limit) {
   return `あと${minutes}分`;
 }
 
+function showInfo(e) {
+  const title = e.target.textContent;
+  const info = tasklist.find(e=>e[1] == title)
+  const data = info
+    .map((e,n) => [
+      create("th", columns[n], {id: columnsEng[n]}),
+      create("td", e)
+    ])
+    .map(Wrap("tr"))
+  const table = create("table", data);
+
+  const information = $("#information")
+  const backdrop = $("#backdrop")
+
+  information.replaceChildren(table);
+
+  information.classList.add("show");
+  backdrop.classList.add("show");
+}
+
+function hideInfo(e) {
+  $("#information").classList.remove("show");
+  $("#backdrop").classList.remove("show");
+}
+
+
 function createTasklist(tasklist) {
   const list = tasklist
     .toSorted(([c,t,i,limit,s,p], [c2,t2,i2,limit2,s2,p2]) => new Date(limit) - new Date(limit2))
@@ -107,7 +104,8 @@ function createTasklist(tasklist) {
         // create("span", title),
         create("span", title, {events: {click: showInfo}}),
         create("span", getRemainingTime(limit)),
-        create("input", status, {type: "checkbox", events: {click: statusChange}})
+        // create("input", status, {type: "checkbox", events: {click: statusChange}})
+        create("input", status, {type: "checkbox"})
       ]
       const task = create("div", data)
       return task;
@@ -123,6 +121,10 @@ const tasklistDiv = create("div", null, {id: "tasklist"});
 append("#container", tasklistDiv);
 
 append("#tasklist", createTasklist(tasklist));
+
+append("#container", create("div", null, {id: "backdrop", events: { click: hideInfo } }));
 append("#container", create("div", null, {id: "information"}));
+
+
 // append("#container", createAddTaskBtn());
 // append("#container", create("input", null, {type: "checkbox"}));

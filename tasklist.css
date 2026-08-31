@@ -66,7 +66,6 @@ header {
   top: 40vh;
   left: 0;
   right: 0;
-  padding: 1em 2em;
   padding: 1em;
   height: 100%;
   background-color: #bababa;
@@ -85,5 +84,23 @@ header {
 
   &.show {
     transform: translateY(0);
+  }
+}
+
+#backdrop {
+  position: fixed;
+  z-index: 99;
+  inset: 0;
+
+  opacity: 0;
+  pointer-events: none;
+
+  transition: opacity 0.4s ease;
+
+  background: rgb(0 0 0 / 40%);
+
+  &.show {
+    opacity: 1;
+    pointer-events: auto;
   }
 }
