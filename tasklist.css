@@ -1,0 +1,34 @@
+
+#container {
+  display: flex;
+  flex-direction: row;
+  /* position: relative; */
+  justify-content: center;
+}
+
+header {
+  display: flex;
+  justify-content: center;
+}
+
+#tasklist {
+  display: flex;
+  gap: 1em;
+  flex-direction: column;
+  align-items: stretch;
+
+  > div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 90vw;
+    border: 1px solid skyblue;
+    border-radius: 0.7em;
+    padding: 0.5em;
+
+    input[type=checkbox] {
+      width: 2em;
+      height: 2em;
+    }
+  }
+}
