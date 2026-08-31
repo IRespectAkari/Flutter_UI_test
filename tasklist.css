@@ -18,9 +18,11 @@ header {
   align-items: stretch;
 
   > div {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
-    justify-content: space-between;
+    gap: 1em;
+
     width: 90vw;
     border: 1px solid skyblue;
     border-radius: 0.7em;
@@ -30,5 +32,58 @@ header {
       width: 2em;
       height: 2em;
     }
+  }
+}
+/*
+#information {
+  position: fixed;
+  display: flex;
+  top: 30vh;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  flex-direction: column;
+  background-color: black;
+  padding: 2em;
+  gap: 1em;
+
+  > div {
+    display: grid;
+    grid-template-columns: auto auto 1fr;
+    align-items: center;
+    gap: 1em;
+
+    span:first-child {
+      min-width: 4em;
+    }
+  }
+} */
+
+
+#information {
+  display: flex;
+  position: fixed;
+  top: 40vh;
+  left: 0;
+  right: 0;
+  padding: 1em 2em;
+  padding: 1em;
+  height: 100%;
+  background-color: #bababa;
+  border-radius: 2em;
+  flex-direction: column;
+  z-index: 100;
+  transform: translateY(100%);
+  transition: all 0.4s ease;
+
+  table {
+    th {
+      text-align: left;
+      min-width: 5em;
+    }
+  }
+
+  &.show {
+    transform: translateY(0);
   }
 }
