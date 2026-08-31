@@ -97,20 +97,3 @@
 }());
 
 
-const calendarTest = create("div", null, {id: "calendarTest"})
-append("body", calendarTest)
-
-const maxDays = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
-
-const days = maxDays
-  .flatMap(n=>range(n,1))
-  // .map(Wrap("span", {classList: "day"}))
-  .map(n => create("span", n, {classList: n <= 7 ? "day spliter" : "day"}))
-console.log(maxDays.map(n=>range(n,1)))
-
-const paddingDate = range(new Date("2026/1/1").getDay())
-  .map(_=>create("span", null, {classList: "paddingDate"}))
-
-days.unshift(...paddingDate)
-append("#calendarTest", days)
-
