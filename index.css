@@ -11,11 +11,17 @@ header {
   justify-content: center;
 }
 
+body {
+  margin: 0;
+}
+
 table {
   border-collapse: collapse;
   /* position: relative; */
-  width: 100%;
-  aspect-ratio: 1;
+  /* width: 100%; */
+  /* aspect-ratio: 1; */
+  width: 99vw;
+  height: 75vh;
 
   thead tr td {
     height: 2em;
@@ -41,7 +47,7 @@ table {
       justify-content: space-evenly;
 
       span:first-child {
-        margin-bottom: 1em;inherit
+        /* margin-bottom: 1em; */
       }
     }
 
