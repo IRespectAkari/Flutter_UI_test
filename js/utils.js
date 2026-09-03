@@ -113,6 +113,9 @@ function create(tagName = "div", children = [], options = {}) {
     // if (!value) continue;
 
     switch(key){
+      case "dataset":
+        Object.entries(value).map(([key, value]) => element.dataset[key] = value)
+        break;
       case "className":// className: ""
       case "classList":// classList: [...]
         if (Array.isArray(value)) {
