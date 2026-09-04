@@ -27,9 +27,6 @@ function createMonth(year, month) {
 }
 
 
-
-
-
 const calendarTest = create("div", null, {id: "calendarTest"})
 append("body", calendarTest)
 
@@ -90,6 +87,7 @@ function scrollToMonthAdapter() {
   scrollToMonth(year, month);
 }
 
+// year年month月
 function scrollToMonth(year, month) {
   const target = $(`.month[data-year="${year}"][data-month="${month}"]`);
 
