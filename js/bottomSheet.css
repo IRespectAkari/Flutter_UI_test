@@ -1,5 +1,5 @@
 
-#information {
+#bottom-sheet {
   position: fixed;
   top: 40vh;
   left: 0;
@@ -18,7 +18,7 @@
   }
 }
 
-#backdrop {
+#bottom-sheet-backdrop {
   position: fixed;
   z-index: 99;
   inset: 0;
@@ -35,3 +35,4 @@
     pointer-events: auto;
   }
 }
+

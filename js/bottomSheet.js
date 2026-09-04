@@ -12,24 +12,14 @@ function injectBottomSheetStyle() {
     href: "./js/bottomSheet.css",
   });
 
-  // link.id = "bottom-sheet-style";
-  // link.rel = "stylesheet";
-  // link.href = "./css/bottomSheet.css";
-
   append("head", link);
 }
 
-function BottomSheet(selector) {
+function BottomSheet(parentSelector) {
   injectBottomSheetStyle();
 
-  const backdrop = create("div", null, {
-    classList: "bottom-sheet-backdrop",
-    events: { click: hide }
-  });
-
-  const sheet = create("div", null, {
-    classList: "bottom-sheet"
-  });
+  const backdrop = create("div", null, {id: "bottom-sheet-backdrop", events: { click: hide }});
+  const sheet    = create("div", null, {id: "bottom-sheet"});
 
 
   function show(content) {
@@ -44,12 +34,9 @@ function BottomSheet(selector) {
     sheet.classList.remove("show");
   }
 
-  append(selector, backdrop);
-  append(selector, sheet);
+  append(parentSelector, backdrop);
+  append(parentSelector, sheet);
 
-  return {
-    show,
-    hide
-  };
+  return { show, hide };
 }
 
