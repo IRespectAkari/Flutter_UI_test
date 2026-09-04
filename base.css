@@ -1,0 +1,22 @@
+
+* {
+  font-family: "ヒラギノ角ゴ ProN W3";
+  margin: 0;
+}
+
+#container {
+  display: flex;
+  justify-content: center;
+  flex-direction: row;
+  /* position: relative; */
+}
+
+header {
+  display: flex;
+  justify-content: center;
+}
+
+body {
+  margin: 0;
+}
+
