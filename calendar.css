@@ -1,4 +1,7 @@
-
+* {
+  font-family: "ヒラギノ角ゴ ProN W3";
+  margin: 0;
+}
 #container {
   display: flex;
   justify-content: center;
@@ -14,27 +17,66 @@ header {
 }
 
 div.month {
+  --width: 100vw;
+  --aspectRatio: 0.7;
+  --boxShadow: 1px;
   display: grid;
-  /* grid-auto-flow: column; */
-  /* gap: 1em; */
-  grid-template-columns: repeat(7, 1fr); /* 3列に指定 */
-  width: 90vw;
+  grid-template-columns: repeat(7, 1fr); /* 7列に指定 */
+  width: var(--width);
   margin: auto;
-  margin-bottom: 1em;
-  margin-top: -1em;
+  margin-bottom: calc(-1 * var(--width) / 7 / var(--aspectRatio) + var(--boxShadow));/* 段差を打ち消すため */
+  position: relative;
 
-  div {
-    border: 1px solid;
+  &.paddingDate-0 {
+    margin-top: calc(var(--width) / 7 / var(--aspectRatio) - var(--boxShadow));/* マイナスのmargin-bottomを打ち消し */
+  }
+
+  /* .dayまたは.paddingDate */
+  > div {
+    aspect-ratio: var(--aspectRatio);
+    border: 1px solid rgb(0,0,0,0);
 
     &.day {
-      aspect-ratio: 1;
+      box-shadow: 0 0 0 var(--boxShadow) #555;
       display: flex;
-      justify-content: flex-end;
+      justify-content: flex-start;
+      font-size: 0.6em;
+      flex-direction: column;
+      align-items: flex-end;
+      /* box-sizing: border-box; */
 
-      &.spliter {
-        border-top: 2px solid;
-        height: calc(auto - 1px);
+      > span {
+        font-weight: bold;
+        padding-right: 0.1em;/* 日にちを見やすく */
+      }
+
+      > .shedules {
       }
     }
   }
 }
+
+/* 背景色 */
+.month{
+  &:nth-child(2n)   > .day { background-color: #ffd7d7; } /* 偶数月 */
+  &:nth-child(2n-1) > .day { background-color: #e6e6ff; } /* 奇数月 */
+}
+
+/* 背景に何月かを表示 */
+div.month::after {
+  content: attr(data-month);         /* 「1月～12月」をdata-monthから取得して表示 */
+  position: absolute;                /* 親要素がrelativeでないと効かない */
+  top: 50%;                          /* 垂直方向の中央寄せ */
+  left: 50%;                         /* 水平方向の中央寄せ */
+  transform: translate(-50%, -50%);  /* 中央に配置 */
+  font-size: 70px;                   /* 背景テキストのフォントサイズ */
+  color: rgb(255 198 0 / 52%);     /* 背景テキストの色（透明度含む） */
+  z-index: 0;                        /* 背景として配置 */
+  white-space: nowrap;               /* テキストの折り返し防止 */
+}
+
+/* div.month > div.day:nth-child(7n)   { background-color: #c3cdff; }*//* 土曜日 */
+/* div.month > div.day:nth-child(7n+1) { background-color: #ffa9a9; }*//* 日曜日 */
+
+div.month > div.day:nth-child(7n)   { color: #0095ff; }/* 土曜日 */
+div.month > div.day:nth-child(7n+1) { color: red; }    /* 日曜日 */
