@@ -34,31 +34,6 @@ header {
     }
   }
 }
-/*
-#information {
-  position: fixed;
-  display: flex;
-  top: 30vh;
-  right: 0;
-  left: 0;
-  bottom: 0;
-  flex-direction: column;
-  background-color: black;
-  padding: 2em;
-  gap: 1em;
-
-  > div {
-    display: grid;
-    grid-template-columns: auto auto 1fr;
-    align-items: center;
-    gap: 1em;
-
-    span:first-child {
-      min-width: 4em;
-    }
-  }
-} */
-
 
 #information {
   display: flex;
