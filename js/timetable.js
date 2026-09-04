@@ -195,10 +195,7 @@ function createTimeWheelPicker(initialTime) {
     timeDiv.textContent = formatTime(hours, minutes);
 
     // 4. dを更新して、crosshairAndLineAdapterの実行
-    // const d = new Date()
     d.setHours(hours, minutes)
-    // setDayOfWeek(d, )
-    // d.set
     crosshairAndLineAdapter(d, periodTime)
   }, { passive: false }); // preventDefaultを動かすために必要
 
