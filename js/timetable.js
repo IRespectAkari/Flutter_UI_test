@@ -48,6 +48,7 @@ const timetable_2_first_csv = [
 金,3,ネットワークアプリケーション構築
 金,5,法学`][0];
 
+// サンプルデータ
 const sample = [
 // 曜日,時限,講義名,講義室,先生名,メモ
 `月,1,統計学入門,3号館 301室,佐藤 健一,出席カードあり・教科書持参
@@ -66,6 +67,21 @@ const sample = [
 金,3,ネットワークアプリケーション構築,2号館 PC室2,井上 健太郎,API連携のデモあり
 金,5,法学,1号館 303室,清水 美紀,六法（またはスマホで条文）持参`][0];
 
+const sample2 = [
+// 曜日,時限,講義名,講義室,先生名,メモ
+`月,3,消費者行動論,1号館 201室,山田 恒一,消費者心理と購買行動について学ぶ・資料配布あり
+月,4,社会学,3号館 203室,佐々木 美香,社会構造と現代社会の課題を扱う・出席重視
+火,2,宗教学,1号館 大講義室,中川 恒一,宗教の基礎概念と社会との関係を学ぶ・小レポートあり
+火,3,情報リテラシー演習２,2号館 PC室1,吉田 拓也,Officeソフトを使った実習中心・課題提出あり
+水,1,キャリアデザイン2,1号館 105室,山口 智子,就職活動やキャリア形成について考える・自己分析課題あり
+水,2,情報ネットワーク入門,4号館 ネットワーク演習室,森田 和也,ネットワークの基礎と通信の仕組みを学ぶ・実習あり
+水,4,情報数学１,3号館 102室,石井 恒一,集合と論理・確率など情報系の基礎数学を扱う・小テストあり
+水,5,インターンシップ実習,キャリア支援室,藤田 直子,インターンシップに向けた事前指導・活動報告書の提出あり
+木,2,プレゼミ2（競プロ）,2号館 PC室2,高田 翔太,プログラミングコンテスト形式の演習・C++推奨
+木,5,Webデザイン,メディアセンター 実習室A,小川 里奈,HTMLとCSSを使ったWeb制作・制作課題あり
+金,1,プログラミング初歩Ⅱ,2号館 PC室1,岡本 恒一,プログラミングの基礎から応用演習まで扱う・課題提出あり
+金,3,情報倫理,1号館 303室,西村 真紀,個人情報や著作権など情報社会の倫理を学ぶ・レポート課題あり`][0];
+
 // 時間割の時間
 const periodTime = [
   ["8:50", "10:20"],
@@ -76,25 +92,19 @@ const periodTime = [
 ]
 
 // 空の時間割作成
-// append("#container", createEmptyTimetable("timetable"));
 append("#container", createEmptyTimetable("timetable", periodTime));
 
 // 空の時間割に授業を登録（表示）
 registerAllTimetable(
   "timetable",
-  timetable_2_first_csv.split("\n").map(e=>e.split(","))
+  sample.split("\n").map(e=>e.split(","))
 )
 
 // 上部トグルボタン作成
 function timetableToggle(e) {
-  // const toggle = toggleGen(
-  //   timetable_1_second_csv.split("\n").map(e=>e.split(",")),
-  //   timetable_2_first_csv.split("\n").map(e=>e.split(",")),
-  // );
   const toggle = [
-    timetable_1_second_csv.split("\n").map(e=>e.split(",")),
-    timetable_2_first_csv.split("\n").map(e=>e.split(",")),
     sample.split("\n").map(e=>e.split(",")),
+    sample2.split("\n").map(e=>e.split(",")),
   ]
 
   return function(e) {
@@ -102,23 +112,19 @@ function timetableToggle(e) {
     clearTimetable("timetable")
     clearCrosshairHighlight("timetable")
     clearLine()
-    registerAllTimetable("timetable", toggle[Math.floor(Math.random() * 3)]);
+    registerAllTimetable("timetable", toggle[Math.floor(Math.random() * 2)]);
     // registerAllTimetable("timetable", toggle.next().value);
   }
 }
-// const toggle = create("input", null, {type: "checkbox", event: {type: "change", func: timetableToggle()}})
-// const toggleLabel = create("label", [toggle, "時間割切り替え"])
-// const header = $("header")
-// header.append(toggleLabel);
 const toggleBtn = create("Button", "時間割切り替え", { event: {type: "click", func: timetableToggle()}})
 append("header", toggleBtn);
 
-append("#container", create("div", [
-  create("h1", null, {classList: "courseName"}),
-  create("span", null, {classList: "place"}),
-  create("span", null, {classList: "teacher"}),
-  create("p", null, {classList: "discription"})
-], {id: "discriptionDiv"}));
+// append("#container", create("div", [
+//   create("h1", null, {classList: "courseName"}),
+//   create("span", null, {classList: "place"}),
+//   create("span", null, {classList: "teacher"}),
+//   create("p", null, {classList: "discription"})
+// ], {id: "discriptionDiv"}));
 
 
 // -----------------------------------------------------------------------------------------------------------------------

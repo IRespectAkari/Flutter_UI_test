@@ -122,9 +122,14 @@ function createEmptyTimetable(id, periodTimeArray) {
 
   const table = range(5).map(_=>range(5));
 
+  const tdClickAdapter = e => {
+    crosshairHighlight(e);
+    showDiscription(e);
+  };
+
   const trs = table
     .map((e, time) => {
-      return e.map((_, day) => create("td", null, {classList: [`time-${time + 1}`, `day-${day}`], events: { click: crosshairHighlight }}))
+      return e.map((_, day) => create("td", null, {classList: [`time-${time + 1}`, `day-${day}`], events: { click: tdClickAdapter }}))
     })
     .map(Wrap("tr"));
 
@@ -147,56 +152,36 @@ function createEmptyTimetable(id, periodTimeArray) {
 
 // 1つの時間割データを反映させる関数
 function registerTimetable(tableId, day, time, course, others) {
-  if(!others.length){
-    append(
-      $(`#${tableId} td.day-${day}.time-${time}`),
-      create("div", course, {classList: "course"})
-    );
-  }else {
-    // console.log(others)
-    const [place, teacher, some] = others;
-    const classNames = ["courseName", "place", "teacher", "discription"]
-    const courseInfo = [course, place, teacher].map((e,i)=>create("span", e, {classList: classNames[i]}));
-    append(
-      $(`#${tableId} td.day-${day}.time-${time}`),
-      create("div", courseInfo, {classList: "course", events: { click: showDiscription }})
-    );
-  }
-  return;
-// ------------------------
-  // console.log(others)
   const [place, teacher, some] = others;
   const classNames = ["courseName", "place", "teacher", "discription"]
   const courseInfo = [course, place, teacher].map((e,i)=>create("span", e, {classList: classNames[i]}));
   append(
     $(`#${tableId} td.day-${day}.time-${time}`),
-    create("div", courseInfo, {classList: "course", events: { click: showDiscription }})
+    create("div", courseInfo, {classList: "course"})
   );
 }
 
+const courseInformation = BottomSheet("#container");
+
 function showDiscription(e) {
-  const parent = e.target.closest("div.course");
-  // if() 
-console.log(parent)
-  const [course, place, teacher, some] = [...parent.children].map(e=>e.textContent)
+  const parentTD = e.target.closest("td:has(div.course)");
+  if(!parentTD) {
+    courseInformation.hide();
+    return;
+  }
+  const parent = $("div.course", parentTD);
+  const [course, place, teacher, some] = [...parent.children].map(e=>e.textContent);
+console.log(course, place, teacher, some)
+  const discriptionDiv = create("div", [
+    create("h1", course, {classList: "courseName"}),
+    create("span", place, {classList: "place"}),
+    create("span", teacher, {classList: "teacher"}),
+    create("p", some, {classList: "discription"})
+  ], {id: "discriptionDiv"})
 
-  const info = {
-    "courseName": course,
-    "place": place,
-    "teacher": teacher,
-    "discription": some,
-  };
-  Object.entries(info)
-    .map(peek)
-    .map(([tag, data])=>{
-      console.log(tag, data, `#discriptionDiv .${tag}`)
-      $(`#discriptionDiv .${tag}`).textContent = data
-    })
-
-  // 下からせり出すdivを表示
-  $("#discriptionDiv").classList.toggle("show");
-console.log(info)
+  courseInformation.show(discriptionDiv);
 }
+
 
 // 授業データ配列を変換しつつ、反映させる関数
 // [曜日,時限,科目名] => [曜日の数字, 時限, 科目名]
