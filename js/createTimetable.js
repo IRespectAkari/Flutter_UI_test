@@ -10,6 +10,7 @@ function crosshairAndLineAdapter(date, periodTimeArray) {
     cancelable: true,
     view: window
   });
+  clickEvent.timeTest = true;
 
 // console.log(getPeriodIndex(date, periodTimeArray))
   const period = getPeriodIndex(date, periodTimeArray) + 1;
@@ -45,34 +46,13 @@ function getPeriodIndex(targetDate, periodTimeArray) {
   const result = periodTimeArray
     .map(([start, end])=>[
       convertToTime(start),
-      convertToTime(end)])
+      convertToTime(end)
+    ])
     .findIndex(([startMinutes, endMinutes], i) => targetMinutes >= startMinutes && targetMinutes <= endMinutes)
-    // .map(([startMinutes, endMinutes], i) => targetMinutes >= startMinutes && targetMinutes <= endMinutes ? i : -1)
-    // .filter(e=>e>=0)
   // console.log("getPeriodIndex", result)
 
   return result;
-  // return result[0] ? result[0] : -1;
-/*
-  for (let i = 0; i < periodTime.length; i++) {
-    const [startStr, endStr] = periodTime[i];
 
-    // 「8:50」を 分 換算にする（8 * 60 + 50 = 530分）
-    const [startH, startM] = startStr.split(':').map(Number);
-    const startMinutes = startH * 60 + startM;
-
-    // 「10:20」を 分 換算にする（10 * 60 + 20 = 620分）
-    const [endH, endM] = endStr.split(':').map(Number);
-    const endMinutes = endH * 60 + endM;
-
-    // 引数の時間が、開始〜終了の間にあるか判定
-    if (targetMinutes >= startMinutes && targetMinutes <= endMinutes) {
-      return i; // 何番目かを返す（0からスタート）
-    }
-  }
-
-  return -1; // どこにも属さない場合
-*/
 }
 
 
@@ -169,6 +149,7 @@ function showDiscription(e) {
     courseInformation.hide();
     return;
   }
+if(e.timeTest) return;
   const parent = $("div.course", parentTD);
   const [course, place, teacher, some] = [...parent.children].map(e=>e.textContent);
 console.log(course, place, teacher, some)
