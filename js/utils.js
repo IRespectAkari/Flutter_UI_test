@@ -177,10 +177,23 @@ const createInput = (type) => create("input", null, { type: type });
 /* 引数のタグで囲うcreate関数を返す関数
  * example : Wrap("label") は e => create("label", e) を返す
  */
-//使い方 .map(Wrap("label"))
-function Wrap(tag, options = {}) {
-  return e => create(tag, e, options);
+//使い方1 range(12, 1).map(Wrap("label"))  |---------------------------------->  [<label>1</label>, ..., <label>12</label>]
+//使い方2 range(12, 1).map(Wrap("span", {id: month => `m-${month}`}))  |-->  [<label id="m-1">1</label>, ..., <label id="m-12">12</label>]
+function Wrap(tag, option = {}) {
+  return e => {
+    const resolvedOption = Object.fromEntries(
+      Object.entries(option)
+        .map(([key, value]) => [
+          key, typeof value === "function" ? value(e) : value
+        ])
+    );
+
+    return create(tag, e, resolvedOption);
+  };
 }
+// function Wrap(tag, options = {}) {
+//   return e => create(tag, e, options);
+// }
 
 // selector に当てはまる要素をすべて削除
 function remove(selector) {
