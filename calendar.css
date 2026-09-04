@@ -10,10 +10,36 @@
     display: block;
   }
 }
+header + h1 {
+  position: fixed;
+  right: 0;
+  top: 0;
+  opacity: 0.5;
+  z-index: -999;
+  font-size: 1em;
+}
 
 header {
-  /* display: flex; */
-  /* justify-content: center; */
+  height: 10vh;
+  display: flex;
+  /* outline: solid red 1px; */
+  justify-content: space-between;
+
+  > #displayMonth {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 4vh;
+    select {
+      font-size: 3.5vh;
+    }
+  }
+
+  > #config,
+  > #option {
+    aspect-ratio: 1;
+  }
 }
 
 div.month {
@@ -80,3 +106,8 @@ div.month::after {
 
 div.month > div.day:nth-child(7n)   { color: #0095ff; }/* 土曜日 */
 div.month > div.day:nth-child(7n+1) { color: red; }    /* 日曜日 */
+
+#calendarTest {
+  height: 80vh;
+  overflow-y: scroll;
+}
