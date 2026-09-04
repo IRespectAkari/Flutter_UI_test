@@ -141,8 +141,16 @@ function create(tagName = "div", children = [], options = {}) {
         }
         break;
 
-      case "style":// style: { color: "red", maxHeight: "100px" }
-        if ("object" === typeof value) Object.assign(element.style, value);
+      case "style":// style: { color: "red", "--datePadding": "100px" }
+        if ("object" === typeof value && value !== null) {
+          Object.entries(value).map(([key, val]) => {
+            if(key.startsWith("--")) {
+              element.style.setProperty(key, val);
+            }else {
+              element.style[key] = val;
+            }
+          })
+        }
         break;
 
       case "color":
