@@ -2,8 +2,10 @@
 #container {
   display: flex;
   justify-content: center;
-  flex-direction: row;
+  flex-direction: column;
   /* position: relative; */
+  width: 100%;
+  align-items: center;
 }
 
 header {
@@ -15,15 +17,12 @@ body {
   margin: 0;
 }
 
-table {
-  border-collapse: collapse;
-  /* position: relative; */
-  /* width: 100%; */
-  /* aspect-ratio: 1; */
+table#timetable {
   width: 99vw;
   height: 75vh;
+  border-radius: 1em;
 
-  thead tr td {
+  thead tr th {
     height: 2em;
   }
 
@@ -31,11 +30,18 @@ table {
     width: 2em;
   }
 
-  td,th {
+  td {
     border: solid 1px black;
-    /* padding: 0.3em; */
+    border-radius: 1em;
+
+    .courseName {
+      font-size: 1.5em !important;
+    }
+  }
+
+  td,th {
     width: 6em;
-    height: 6em;
+    height: calc(75vh / 6);
     text-align: center;      /* 左右の中央揃え */
     vertical-align: middle;  /* 上下の中央揃え */
     font-size: 0.5em;
@@ -43,8 +49,7 @@ table {
     div {
       display: flex;
       flex-direction: column;
-      height: 100%;
-      justify-content: space-evenly;
+      /* height: 100%; */
 
       span:first-child {
         /* margin-bottom: 1em; */
@@ -128,13 +133,32 @@ div#bottom-sheet > div {
     justify-content: center;
   }
 
-  &.show {
-    transform: translateY(0);
+  table {
+    th {
+      width: 5em;
+    }
+  }
+}
+
+#timetableSelector {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+
+  input {
+    display: none;
   }
 
-  @keyframes slideUp {
-    to {
-      transform: translateY(0);
+  label {
+    border-radius: 0.5em;
+    font-size: 1.3em;
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    &:has(:checked) {
+      background-color: #5ad25a;
     }
   }
 }

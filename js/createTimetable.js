@@ -1,3 +1,107 @@
+// 1年後期
+const timetable_1_second = [
+  /* 月 */["", "", '消費者行動論', '社会学', ""],
+  /* 火 */["", '宗教学', '情報リテラシー演習２', "", ""],
+  /* 水 */['キャリアデザイン2', '情報ネットワーク入門', "", '情報数学１', 'インターンシップ実習'],
+  /* 木 */["", 'プレゼミ2（競プロ）', "", "", 'Webデザイン'],
+  /* 金 */['プログラミング初歩Ⅱ', "", '情報倫理', "", ""],
+// 2年前期
+  /* 月 */["統計学入門", "", "", "プログラミング実践1", "プログラミング実践1"],
+  /* 火 */["アプリ共同開発実践", "初級韓国語", "", "データベース論", "スイッチング技術"],
+  /* 水 */["ビジネスプログラミング", "", "情報処理技術演習1", "経営情報学1", "情報数学2"],
+  /* 木 */["", "", "基礎ゼミ", "", ""],
+  /* 金 */["", "経済学", "ネットワークアプリケーション構築", "", "法学"],
+];
+
+// 1年後期
+const timetable_1_second_csv = [
+// 曜日,時限,科目名
+`月,3,消費者行動論
+月,4,社会学
+火,2,宗教学
+火,3,情報リテラシー演習２
+水,1,キャリアデザイン2
+水,2,情報ネットワーク入門
+水,4,情報数学１
+水,5,インターンシップ実習
+木,2,プレゼミ2（競プロ）
+木,5,Webデザイン
+金,1,プログラミング初歩Ⅱ
+金,3,情報倫理`][0];
+
+// 2年前期
+const timetable_2_first_csv = [
+// 曜日,時限,科目名
+`月,1,統計学入門
+月,4,プログラミング実践1
+月,5,プログラミング実践1
+火,1,アプリ共同開発実践
+火,2,初級韓国語
+火,4,データベース論
+火,5,スイッチング技術
+水,1,ビジネスプログラミング
+水,3,情報処理技術演習1
+水,4,経営情報学1
+水,5,情報数学2
+木,3,基礎ゼミ
+金,2,経済学
+金,3,ネットワークアプリケーション構築
+金,5,法学`][0];
+
+// サンプルデータ
+const sampleCSV = [
+// 曜日,時限,講義名,講義室,先生名,メモ
+`月,1,統計学入門,3号館 301室,佐藤 健一,出席カードあり・教科書持参
+月,4,プログラミング実践1,メディアセンター 実習室A,田中 裕子,演習課題は次回までに提出
+月,5,プログラミング実践1,メディアセンター 実習室A,田中 裕子,連続講義（4限の続き）
+火,1,アプリ共同開発実践,2号館 PC室2,鈴木 誠,チーム分け発表・GitHub要準備
+火,2,初級韓国語,1号館 105室,金 敏智,小テストの頻度高め
+火,4,データベース論,3号館 204室,高橋 隆,SQLの基本復習をしておく
+火,5,スイッチング技術,4号館 ネットワーク演習室,渡辺 浩,実機（Cisco）を使った実習
+水,1,ビジネスプログラミング,2号館 PC室1,伊藤 恵子,レポート課題あり
+水,3,情報処理技術演習1,メディアセンター 実習室B,中村 昭夫,タイピング練習あり
+水,4,経営情報学1,1号館 202室,小林 直樹,ケーススタディ中心
+水,5,情報数学2,3号館 102室,加藤 洋子,グラフ理論の小テスト注意
+木,3,基礎ゼミ,研究棟 会議室3,山本 哲也,プレゼン準備期間
+金,2,経済学,1号館 大講義室,松本 圭介,マクロ経済の基礎・出席重視
+金,3,ネットワークアプリケーション構築,2号館 PC室2,井上 健太郎,API連携のデモあり
+金,5,法学,1号館 303室,清水 美紀,六法（またはスマホで条文）持参`][0];
+
+const sampleCSV2 = [
+// 曜日,時限,講義名,講義室,先生名,メモ
+`月,3,消費者行動論,1号館 201室,山田 恒一,消費者心理と購買行動について学ぶ・資料配布あり
+月,4,社会学,3号館 203室,佐々木 美香,社会構造と現代社会の課題を扱う・出席重視
+火,2,宗教学,1号館 大講義室,中川 恒一,宗教の基礎概念と社会との関係を学ぶ・小レポートあり
+火,3,情報リテラシー演習２,2号館 PC室1,吉田 拓也,Officeソフトを使った実習中心・課題提出あり
+水,1,キャリアデザイン2,1号館 105室,山口 智子,就職活動やキャリア形成について考える・自己分析課題あり
+水,2,情報ネットワーク入門,4号館 ネットワーク演習室,森田 和也,ネットワークの基礎と通信の仕組みを学ぶ・実習あり
+水,4,情報数学１,3号館 102室,石井 恒一,集合と論理・確率など情報系の基礎数学を扱う・小テストあり
+水,5,インターンシップ実習,キャリア支援室,藤田 直子,インターンシップに向けた事前指導・活動報告書の提出あり
+木,2,プレゼミ2（競プロ）,2号館 PC室2,高田 翔太,プログラミングコンテスト形式の演習・C++推奨
+木,5,Webデザイン,メディアセンター 実習室A,小川 里奈,HTMLとCSSを使ったWeb制作・制作課題あり
+金,1,プログラミング初歩Ⅱ,2号館 PC室1,岡本 恒一,プログラミングの基礎から応用演習まで扱う・課題提出あり
+金,3,情報倫理,1号館 303室,西村 真紀,個人情報や著作権など情報社会の倫理を学ぶ・レポート課題あり`][0];
+
+const sample = sampleCSV.trim().split("\n").map(s=>s.split(","));
+const sample2 = sampleCSV2.trim().split("\n").map(s=>s.split(","));
+
+// タイプと値を渡すと、該当するレコードを全て返す関数
+function searchBy(courseName) {
+  // const index = column["en"].indexOf(type);
+  return sample.find(row => row[2] === courseName) || sample2.find(row => row[2] === courseName);
+}
+
+// ------------------------------------------------
+
+// 時間割の時間
+const periodTime = [
+  ["8:50", "10:20"],
+  ["10:30", "12:00"],
+  ["12:50", "14:20"],
+  ["14:30", "16:00"],
+  ["16:10", "17:40"],
+]
+
 // クリック以外から呼び出せるように、外部に作成
 function crosshairAndLineAdapter(date, periodTimeArray) {
   const createTimeObj = timeTxt => {const d = new Date(); d.setHours(...(timeTxt.split(":"))); return d;}
@@ -88,8 +192,8 @@ function clearCrosshairHighlight(tableId) {
 
 // 空の時間割を作る関数
 function createEmptyTimetable(id, periodTimeArray) {
-  const week = "月火水木金".split("").map(Wrap("td", {classList: "day"}));
-  week.unshift(create("td", null, {classList: ["day", "time"]}));
+  const week = "月火水木金".split("").map(Wrap("th", {classList: "day"}));
+  week.unshift(create("th", null, {classList: ["day", "time"]}));
 
   const time = range(5, 1)// 1, 2, 3, 4, 5
     .map((n, i) => [
@@ -132,9 +236,10 @@ function createEmptyTimetable(id, periodTimeArray) {
 
 // 1つの時間割データを反映させる関数
 function registerTimetable(tableId, day, time, course, others) {
-  const [place, teacher, some] = others;
-  const classNames = ["courseName", "place", "teacher", "discription"]
-  const courseInfo = [course, place, teacher].map((e,i)=>create("span", e, {classList: classNames[i]}));
+  // const [place, teacher, some] = others;
+  // const classNames = ["courseName", "place", "teacher", "discription"]
+  // const courseInfo = [course, place, teacher].map((e,i)=>create("span", e, {classList: classNames[i]}));
+  const courseInfo = create("span", course, {classList: "courseName"});
   append(
     $(`#${tableId} td.day-${day}.time-${time}`),
     create("div", courseInfo, {classList: "course"})
@@ -150,9 +255,29 @@ function showDiscription(e) {
     return;
   }
 if(e.timeTest) return;
-  const parent = $("div.course", parentTD);
-  const [course, place, teacher, some] = [...parent.children].map(e=>e.textContent);
-console.log(course, place, teacher, some)
+  const courseName = $(".courseName", parentTD).textContent
+
+  const record = searchBy(courseName) || [];
+  const [day, time, course, place, teacher, some] = record;
+  const info = [day, time, place, teacher, some];
+  const column = {
+    jp: ["曜日", "時限", "場所", "担当", "備考"],
+    en: ["course-day", "course-time", "course-place", "course-teacher", "course-some"],
+  };
+
+  const data = record
+    .map((e,n) => [
+      create("th", column["jp"][n], {id: column["en"][n]}),
+      create("td", e)
+    ])
+    .map(Wrap("tr"))
+  data.unshift(create("h1", course, {id: "courseName"}))
+  const table = create("table", data);
+  const div = create("div", data, {id: "discriptionDiv"})
+
+  courseInformation.show(div);
+  return;
+
   const discriptionDiv = create("div", [
     create("h1", course, {classList: "courseName"}),
     create("span", place, {classList: "place"}),
@@ -161,8 +286,37 @@ console.log(course, place, teacher, some)
   ], {id: "discriptionDiv"})
 
   courseInformation.show(discriptionDiv);
-}
+  return;
 
+//   const parent = $("div.course", parentTD);
+//   const [course, place, teacher, some] = [...parent.children].map(e=>e.textContent);
+// // console.log(course, place, teacher, some)
+//   const discriptionDiv = create("div", [
+//     create("h1", course, {classList: "courseName"}),
+//     create("span", place, {classList: "place"}),
+//     create("span", teacher, {classList: "teacher"}),
+//     create("p", some, {classList: "discription"})
+//   ], {id: "discriptionDiv"})
+
+//   courseInformation.show(discriptionDiv);
+}
+// ----------------------------------------------------------------------------------------------
+function showInfo(e) {
+  const taskDiv = e.target.closest("div.task");
+  const title = $(".title", taskDiv).textContent;
+  const info = tasklist.find(e=>e[1] == title);
+
+  const data = info
+    .map((e,n) => [
+      create("th", column["jp"][n], {id: column["en"][n]}),
+      create("td", e)
+    ])
+    .map(Wrap("tr"))
+  const table = create("table", data);
+
+  information.show(table);
+}
+// ----------------------------------------------------------------------------------------------
 
 // 授業データ配列を変換しつつ、反映させる関数
 // [曜日,時限,科目名] => [曜日の数字, 時限, 科目名]
